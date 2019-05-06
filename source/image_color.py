@@ -1,4 +1,4 @@
-import cv2 as cv
+import cv2
 import numpy as np
 
 hsv = 0
@@ -47,32 +47,33 @@ def color_detec():
     #print("@2", lower_blue2, "~", upper_blue2)
     #print("@3", lower_blue3, "~", upper_blue3)
 
-cv.namedWindow('img_color')
+cv2.namedWindow('img_color')
 
+capture = cv2.VideoCapture('../videos/4K Drone Football Footage_cut.mp4')
 while(True):
-    img_color = cv.imread('soccer.jpg')
+    img_color = cv2.imread('soccer.jpg')
     height, width = img_color.shape[:2]
-    img_color = cv.resize(img_color, (width, height), interpolation=cv.INTER_AREA)
+    img_color = cv2.resize(img_color, (width, height), interpolation=cv2.INTER_AREA)
 
     # 원본 영상을 HSV 영상으로 변환합니다.
-    img_hsv = cv.cvtColor(img_color, cv.COLOR_BGR2HSV)
+    img_hsv = cv2.cvtColor(img_color, cv2.COLOR_BGR2HSV)
     color_detec()
 
     # 범위 값으로 HSV 이미지에서 마스크를 생성합니다.
-    img_mask1 = cv.inRange(img_hsv, lower_blue1, upper_blue1)
-    img_mask2 = cv.inRange(img_hsv, lower_blue2, upper_blue2)
-    img_mask3 = cv.inRange(img_hsv, lower_blue3, upper_blue3)
+    img_mask1 = cv2.inRange(img_hsv, lower_blue1, upper_blue1)
+    img_mask2 = cv2.inRange(img_hsv, lower_blue2, upper_blue2)
+    img_mask3 = cv2.inRange(img_hsv, lower_blue3, upper_blue3)
     img_mask = img_mask1 | img_mask2 | img_mask3
 
     # 마스크 이미지로 원본 이미지에서 범위값에 해당되는 영상 부분을 획득합니다.
-    img_result = cv.bitwise_and(img_color, img_color, mask=img_mask)
+    img_result = cv2.bitwise_and(img_color, img_color, mask=img_mask)
 
-    cv.imshow('img_color', img_color)
-    cv.imshow('img_mask', img_mask)
-    cv.imshow('img_result', img_result)
+    cv2.imshow('img_color', img_color)
+    cv2.imshow('img_mask', img_mask)
+    cv2.imshow('img_result', img_result)
 
     # ESC 키누르면 종료
-    if cv.waitKey(1) & 0xFF == 27:
+    if cv2.waitKey(1) & 0xFF == 27:
         break
 
-cv.destroyAllWindows()
+cv2.destroyAllWindows()
