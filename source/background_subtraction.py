@@ -2,8 +2,9 @@ import cv2
 import numpy as np
 #재생 부분
 cap = cv2.VideoCapture("../../videos/4K Drone Football Footage_cut.mp4")
+kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
 
-fgbg = cv2.createBackgroundSubtractorMOG2(varThreshold=100)
+fgbg = cv2.createBackgroundSubtractorMOG2(varThreshold=80)
 
 # _, first_frame = cap.read()
 # first_gray = cv2.cvtColor(first_frame, cv2.COLOR_BGR2GRAY)
@@ -14,6 +15,10 @@ while True:
     ret, frame = cap.read()
 
     fgmask = fgbg.apply(frame)
+
+    # 노이즈 제거
+    fgmask = cv2.erode(fgmask, kernel, iterations=1)
+    fgmask = cv2.dilate(fgmask, kernel, iterations=1)
 
     nlabels, labels, stats, centroids = cv2.connectedComponentsWithStats(fgmask)
     for index, centroid in enumerate(centroids):
