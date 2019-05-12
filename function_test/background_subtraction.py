@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 #재생 부분
-cap = cv2.VideoCapture("../videos/4K Drone Football Footage_cut.mp4")
+cap = cv2.VideoCapture("../../videos/4K Drone Football Footage_cut.mp4")
 
 fgbg = cv2.createBackgroundSubtractorMOG2(varThreshold=100)
 
