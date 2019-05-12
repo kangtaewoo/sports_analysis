@@ -2,9 +2,9 @@ import cv2
 import numpy as np
 #재생 부분
 cap = cv2.VideoCapture("../../videos/4K Drone Football Footage_cut.mp4")
-kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
+kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(4,4))
 
-fgbg = cv2.createBackgroundSubtractorMOG2(varThreshold=80)
+fgbg = cv2.createBackgroundSubtractorMOG2(varThreshold=70)
 
 # _, first_frame = cap.read()
 # first_gray = cv2.cvtColor(first_frame, cv2.COLOR_BGR2GRAY)
@@ -32,8 +32,8 @@ while True:
         centerX, centerY = int(centroid[0]), int(centroid[1])
 
         if area > 100:
-            cv2.circle(frame, (centerX, centerY), 1, (0, 255, 0), 2)
-            cv2.rectangle(frame, (x, y), (x + width, y + height), (0, 0, 255))
+            cv2.circle(frame, (centerX, centerY), 1, (0, 0, 255), 2)
+            cv2.rectangle(frame, (x, y), (x + width, y + height), (255, 0, 0), 2)
 
 
     cv2.imshow('mask',fgmask)
