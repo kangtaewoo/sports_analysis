@@ -50,7 +50,7 @@ def color_detec():
 cv2.namedWindow('img_color')
 
 #파일 불러오기
-capture = cv2.VideoCapture('../videos/4K Drone Football Footage_cut.mp4')
+capture = cv2.VideoCapture('../../videos/4K Drone Football Footage_cut.mp4')
 count = 0
 
 #모든 프레임 재생
