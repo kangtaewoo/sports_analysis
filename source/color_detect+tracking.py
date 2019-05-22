@@ -27,6 +27,9 @@ upper_red = np.array([280,255,255])
 lower_white = np.array([0, 0, 0])
 upper_white = np.array([0, 0, 255])
 
+lower_blue = np.array([110,50,50])
+upper_blue = np.array([130,255,255])
+
 idx = 0
 # 트래커 초기화
 tracker = cv2.TrackerCSRT_create()
@@ -55,7 +58,7 @@ while True:
     # kernel = np.ones((5,5), np.uint8)
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
     thresh = cv2.threshold(res_gray, 127, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-    thresh = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+    #thresh = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
     thresh = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
 
     contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -78,6 +81,11 @@ while True:
                 res2 = cv2.cvtColor(res2,cv2.COLOR_HSV2BGR)
                 res2 = cv2.cvtColor(res2,cv2.COLOR_BGR2GRAY)
                 nzCount = cv2.countNonZero(res2)
+                # mask3 = cv2.inRange(player_hsv, lower_blue, upper_blue)
+                # res3 = cv2.bitwise_and(player_img, player_img, mask=mask2)
+                # res3 = cv2.cvtColor(res3,cv2.COLOR_HSV2BGR)
+                # res3 = cv2.cvtColor(res3,cv2.COLOR_BGR2GRAY)
+                # nzCountblue = cv2.countNonZero(res3)
 
                 if(nzCountred >= 1):
                     cv2.rectangle(frame, (x,y),(x+w,y+h),(0,0,255),2)
@@ -88,6 +96,11 @@ while True:
                     cv2.rectangle(frame, (x,y),(x+w,y+h),(255,255,255),2)
                 else:
                      pass
+
+                # if(nzCountblue >= 1):
+                #     cv2.rectangle(frame, (x,y),(x+w,y+h),(255,0,0),2)
+                # else:
+                #      pass     
 
     # cv2.bitwise_not(mask, mask)
     # fgmask = fgbg.apply(frame)
