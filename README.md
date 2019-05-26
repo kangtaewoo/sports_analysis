@@ -9,3 +9,6 @@ https://drive.google.com/open?id=1i5gpiHPiCQtx1hHbwKO4RnP08zfV5M6o
 
 Spain vs Morocco World Cup 2018 [Footacam TV] - YouTube (1080p):  
 https://drive.google.com/open?id=15EcZt3Jo2njRXc_0XyOavsEe5ul9HLxO  
+
+dron captured video:  
+https://drive.google.com/open?id=1G7QkDe6dqn2jUy01SjCTbvlTWdeQXKW0  
