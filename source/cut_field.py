@@ -17,7 +17,7 @@ while (capture.isOpened()):
         print('Reached the end of the video')
         break
 
-    #cut field , warp 좌표 순서 상단왼쪽 끝, 상단오른쪽 끝, 하단왼쪽 끝, 하단오른쪽 끝
+    #cut field , warp 좌표 순서 상단왼쪽 끝, 상단오른쪽 끝, 하단왼쪽 끝, 하단오른쪽 끝 (포인트 수동지정)
     pts1 = np.float32([(90,80), (765,97), (5,393), (860,394)])
     pts2 = np.float32([[0,0], [640,0], [0,480], [640,480]])
     m = cv2.getPerspectiveTransform(pts1,pts2)
