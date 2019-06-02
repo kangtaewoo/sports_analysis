@@ -3,10 +3,12 @@ from imutils.video import VideoStream
 import imutils
 import numpy as np
 import math
+import time
 
 #재생 부분
 cap = cv2.VideoCapture("../../videos/test1.mp4")
 # kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(6,6))
+
 
 fgbg = cv2.createBackgroundSubtractorMOG2(varThreshold=50)
 # fgbg1 = cv2.bgsegm.createBackgroundSubtractorCNT(isParallel=True)
@@ -35,7 +37,7 @@ tracker = cv2.TrackerCSRT_create()
 # first_gray = cv2.GaussianBlur(first_gray, (5,5), 0)
 
 initBB = None
-
+count=0
 pts3 = [(0, 0)]
 distance = 0
 resLW = 0
@@ -54,11 +56,15 @@ centerWhite = 0
 rightWhite = 0
 #재생 부분
 while True:
+    start = time.time()
     ret, frame_origin = cap.read()
-
     if frame_origin is None:
         break
-    
+
+    # 속도 개선 프레임 개선
+    count+=1
+    if count%3 != 1 :
+        continue
 
     #cut field , warp 좌표 순서 상단왼쪽 끝, 상단오른쪽 끝, 하단왼쪽 끝, 하단오른쪽 끝 (포인트 수동지정)
     pts1 = np.float32([(0,110), (1280,161), (0,585), (1280,585)])
@@ -187,8 +193,6 @@ while True:
                     resCB = 0
                     resRB = 0
 
-    
-
     info1 = [
             ("Team", "White"),
             ("Right", "{:.2f}".format(resRW)),
@@ -245,7 +249,10 @@ while True:
             (x, y, w, h) = [int(v) for v in box]
             (prex, prey) = pts3.pop()
             if prex != 0:
-                distance += math.sqrt(math.pow((x - prex), 2) + math.pow((y - prey), 2))
+                diff = math.sqrt(math.pow((x*0.01 - prex*0.01), 2) + math.pow((y*0.16 - prey*0.16), 2))
+                if diff < 0.1 :
+                    diff = 0
+                distance += diff
             print(distance)
             pts3.append((x, y))
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 225), 2)
@@ -261,9 +268,8 @@ while True:
                 cv2.putText(frame, text, (10, H - ((i * 20) + 20)),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
 
-
-    cv2.imshow('frame_origin',frame_origin)
-    cv2.imshow('fg', fgmask)
+    #cv2.imshow('frame_origin',frame_origin)
+    #cv2.imshow('fg', fgmask)
     cv2.imshow('frame', frame)
     key = cv2.waitKey(1) & 0xff
     
@@ -272,11 +278,12 @@ while True:
         initBB = cv2.selectROI('frame', frame, fromCenter=False, showCrosshair=True)
         tracker.init(frame, initBB)
 
-
-
-
     if key == 27:
         break
+
+    end = time.time()
+    seconds = end - start
+    print("seconds : {0}".format(seconds))
 
 cap.release()
 cv2.destroyAllWindows()
