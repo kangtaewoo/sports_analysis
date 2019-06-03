@@ -268,8 +268,15 @@ while True:
                 cv2.putText(frame, text, (10, H - ((i * 20) + 20)),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
 
-    #cv2.imshow('frame_origin',frame_origin)
-    #cv2.imshow('fg', fgmask)
+    # frame_origin = cv2.resize(frame_origin, dsize=(720,480), interpolation=cv2.INTER_LINEAR)
+
+    frame_origin = cv2.resize(frame_origin, dsize=(0,0),fx=0.7, fy=0.7, interpolation=cv2.INTER_LINEAR)
+    fgmask = cv2.resize(fgmask, dsize=(0,0),fx=0.7, fy=0.7, interpolation=cv2.INTER_LINEAR)
+    # 전시용 모니터 사이즈full
+    frame = cv2.resize(frame, dsize=(0,0),fx=1.5, fy=1.4, interpolation=cv2.INTER_LINEAR)
+
+    cv2.imshow('frame_origin',frame_origin)
+    cv2.imshow('fg', fgmask)
     cv2.imshow('frame', frame)
     key = cv2.waitKey(1) & 0xff
     
