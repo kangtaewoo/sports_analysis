@@ -62,9 +62,9 @@ while True:
         break
 
     # 속도 개선 프레임 개선
-    count+=1
-    if count%3 != 1 :
-        continue
+    # count+=1
+    # if count%2 != 1 :
+    #     continue
 
     #cut field , warp 좌표 순서 상단왼쪽 끝, 상단오른쪽 끝, 하단왼쪽 끝, 하단오른쪽 끝 (포인트 수동지정)
     pts1 = np.float32([(0,110), (1280,161), (0,585), (1280,585)])
@@ -117,6 +117,10 @@ while True:
     # reffgMask = cv2.bitwise_and(fgmask, refMask)
     # notrefmask = cv2.bitwise_not(reffgMask)
     # fgmask = cv2.bitwise_and(fgmask, notrefmask)
+     # 속도 개선 프레임 개선
+    count+=1
+    if count%3 != 1 :
+        continue
 
     nlabels, labels, stats, centroids = cv2.connectedComponentsWithStats(fgmask)
     for index, centroid in enumerate(centroids):
@@ -133,7 +137,7 @@ while True:
         #     cv2.circle(frame, (centerX, centerY), 1, (0, 0, 255), 2)
         #     cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
 
-        if h >= 1.5*w and h > 15 and h < 30 and x > 90 and y < 690:
+        if h >= 1.5*w and h > 15 and h < 30 and x > 90 and y < 690 and (y + h/2) < 690:
 
                     # cv2.circle(frame, (centerX, centerY), 1, (0, 0, 255), 2)
                     # cv2.rectangle(frame, (x, y), (x+10, y+30), (255, 0, 0), 2)
@@ -246,6 +250,7 @@ while True:
         (success, box) = tracker.update(frame)
 
         if success:
+            
             (x, y, w, h) = [int(v) for v in box]
             (prex, prey) = pts3.pop()
             if prex != 0:
@@ -259,7 +264,7 @@ while True:
 
     info3 = [
             ("Name", "Player1"),
-            ("Distance", "{:.2f}".format(distance)),
+            ("Distance", "{:.2f}m".format(distance)),
     ]
    
     if distance != 0:
@@ -270,10 +275,10 @@ while True:
 
     # frame_origin = cv2.resize(frame_origin, dsize=(720,480), interpolation=cv2.INTER_LINEAR)
 
-    frame_origin = cv2.resize(frame_origin, dsize=(0,0),fx=0.7, fy=0.7, interpolation=cv2.INTER_LINEAR)
-    fgmask = cv2.resize(fgmask, dsize=(0,0),fx=0.7, fy=0.7, interpolation=cv2.INTER_LINEAR)
-    # 전시용 모니터 사이즈full
-    frame = cv2.resize(frame, dsize=(0,0),fx=1.5, fy=1.4, interpolation=cv2.INTER_LINEAR)
+    # frame_origin = cv2.resize(frame_origin, dsize=(0,0),fx=0.7, fy=0.7, interpolation=cv2.INTER_LINEAR)
+    # fgmask = cv2.resize(fgmask, dsize=(0,0),fx=0.7, fy=0.7, interpolation=cv2.INTER_LINEAR)
+    # # 전시용 모니터 사이즈full
+    # frame = cv2.resize(frame, dsize=(0,0),fx=1.5, fy=1.4, interpolation=cv2.INTER_LINEAR)
 
     cv2.imshow('frame_origin',frame_origin)
     cv2.imshow('fg', fgmask)
