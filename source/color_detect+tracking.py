@@ -7,7 +7,7 @@ import time
 import queue
 
 #재생 부분
-cap = cv2.VideoCapture("./DroneView.mp4")
+cap = cv2.VideoCapture("../../videos/test1.mp4")
 # kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(6,6))
 
 
@@ -73,48 +73,25 @@ while True:
     m = cv2.getPerspectiveTransform(pts1,pts2)
     frame = cv2.warpPerspective(frame_origin,m,(1280,720))
     (H, W) = frame.shape[:2]
-    # frame_origin = imutils.resize(frame_origin, width=720)
-    # frame_player = cv2.bitwise_and(frame, frame, mask=mask_player)
-    # frame_field = cv2.bitwise_and(frame, frame, mask=mask_field)
-    # cv2.imshow('frame_player', frame_player)
-    # cv2.imshow('frame_field', frame_field)
-    # cv2.imshow('mask_field', mask_field)
-
+  
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    # # Histogram Equalization
-    # h, s, v = cv2.split(hsv)
-    # equalizedV = cv2.equalizeHist(v)
-    # hsv = cv2.merge([h,s,equalizedV])
+ 
 
     mask = cv2.inRange(hsv, lower_green, upper_green)
     res = cv2.bitwise_and(frame, frame, mask=mask)
     res_bgr = cv2.cvtColor(res,cv2.COLOR_HSV2BGR)
     res_gray = cv2.cvtColor(res, cv2.COLOR_BGR2GRAY)
-    # refMask = cv2.inRange(hsv, YELLOW_MIN, YELLOW_MAX)
-    # cv2.bitwise_not(refMask, refMask)
-    # refMask = cv2.erode(refMask, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2,2)), iterations=1)
-    # refMask = cv2.dilate(refMask, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2,2)), iterations=1)
-    # kernel = np.ones((5,5), np.uint8)
+   
 
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
-    # thresh = cv2.threshold(res_gray, 127, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-    # thresh = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
-    # thresh = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
-    # contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     fgmask = fgbg.apply(frame)
 
     # 노이즈 제거
-    # fgmask = cv2.erode(fgmask, kernel, iterations=1)
-    # fgmask = cv2.dilate(fgmask, kernel, iterations=1)
 
-    # fgmask = cv2.dilate(fgmask, kernel, iterations=1)
-    # fgmask = cv2.erode(fgmask, kernel, iterations=1)
     fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_OPEN, kernel)
     fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_CLOSE, kernel)
-    # reffgMask = cv2.bitwise_and(fgmask, refMask)
-    # notrefmask = cv2.bitwise_not(reffgMask)
-    # fgmask = cv2.bitwise_and(fgmask, notrefmask)
+
 
     nlabels, labels, stats, centroids = cv2.connectedComponentsWithStats(fgmask)
     for index, centroid in enumerate(centroids):
@@ -133,13 +110,13 @@ while True:
             point.append([int(x+w/2), int(y+h/2)])
             if len(point) > 100 :
                 del point[0]
-            count = 20
+            # count = 20
             for i in point :
-                count -= 1
+                # count -= 1
                 q.put_nowait(i)
                 if q.qsize() == 10 :
                     temp = q.get_nowait()
-                    cv2.circle(frame,(temp[0],temp[1]),1,(255,255,255),count)
+                    cv2.circle(frame,(temp[0],temp[1]),1,(255,255,255),3)
                 # cv2.circle(frame,((q.get())[0]),((q.get())[1]),1,(255,255,255),2)
                 # cv2.circle(frame, (centerX, centerY), 1, (0, 0, 255), 2)
                 # cv2.rectangle(frame, (x, y), (x+10, y+30), (255, 0, 0), 2)
