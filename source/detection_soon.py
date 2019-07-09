@@ -60,7 +60,7 @@ def filtercontours(contours):
     for c in contours:
         rect = cv2.boundingRect(c)
         x, y, w, h = rect
-        if w < 20 and h < 30 and y < 670 and y > 30 and h > 4:
+        if y < 670 and y > 30 and h > 5 and h >= 1.3*w:
             playercontours.append(c)
     return playercontours
 
@@ -74,7 +74,7 @@ def classifycontours(contours):
         x, y, w, h = rect
         crop_img = frame[y:y+h,x:x+w]
         meanColor = cv2.mean(crop_img)
-        if meanColor[1] > 148:
+        if meanColor[1] > 140:
             ateamplayers.append(c)
         else:
             bteamplayers.append(c)
@@ -82,7 +82,7 @@ def classifycontours(contours):
     classfiedObjects['bteam'] = bteamplayers
     return classfiedObjects
 
-kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (6,6))
+kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5,5))
 kerenlBig = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (10,10))
 
 # ret, testFrame = cap.read()
@@ -140,7 +140,7 @@ while True:
     clonedFrame = fgmask
 
     ret, thresh1 = cv2.threshold(clonedFrame, 100, 255, cv2.THRESH_BINARY)
-    fgmask = cv2.bitwise_and(fgmask, mask)
+    # fgmask = cv2.bitwise_and(fgmask, mask)
 
     contours, hierarchy = cv2.findContours(fgmask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
