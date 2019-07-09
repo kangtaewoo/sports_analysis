@@ -135,7 +135,7 @@ while True:
             nzCount = cv2.countNonZero(res2)
 
             if(nzCountblue >= 1):
-                cv2.rectangle(frame, (x,y),(x+10,y+30),(255,0,0),2)
+                cv2.rectangle(frame, (x,y),(x+w,y+h),(255,0,0),2)
                 if x < 615:
                     if y < 132:
                         rightBlue += 1
