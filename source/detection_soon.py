@@ -26,8 +26,8 @@ upper_white = np.array([255, 255, 255])
 lower_blue = np.array([100,50,50])
 upper_blue = np.array([130,255,255])
 
-YELLOW_MIN = np.array([45, 50, 50], np.uint8)
-YELLOW_MAX = np.array([80, 100, 100], np.uint8)
+lower_yellow = np.array([45, 50, 50], np.uint8)
+upper_yellow = np.array([80, 100, 100], np.uint8)
 
 idx = 0
 # 트래커 초기화
@@ -60,7 +60,7 @@ def filtercontours(contours):
     for c in contours:
         rect = cv2.boundingRect(c)
         x, y, w, h = rect
-        if y < 670 and y > 30 and h > 5 and h >= 1.3*w:
+        if y < 670 and y > 30 and w > 5 and h > 5 and h >= 1.3*w and h < 40 and x > 90 and x < 1200:
             playercontours.append(c)
     return playercontours
 
@@ -74,7 +74,7 @@ def classifycontours(contours):
         x, y, w, h = rect
         crop_img = frame[y:y+h,x:x+w]
         meanColor = cv2.mean(crop_img)
-        if meanColor[1] > 140:
+        if meanColor[1] > 135:
             ateamplayers.append(c)
         else:
             bteamplayers.append(c)
@@ -82,7 +82,7 @@ def classifycontours(contours):
     classfiedObjects['bteam'] = bteamplayers
     return classfiedObjects
 
-kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5,5))
+kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (4,4))
 kerenlBig = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (10,10))
 
 # ret, testFrame = cap.read()
@@ -107,7 +107,7 @@ while True:
 
     # 속도 개선 프레임 개선
     count+=1
-    if count%3 != 1 :
+    if count%2 != 1 :
         continue
 
     #cut field , warp 좌표 순서 상단왼쪽 끝, 상단오른쪽 끝, 하단왼쪽 끝, 하단오른쪽 끝 (포인트 수동지정)
@@ -126,8 +126,15 @@ while True:
 
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-    mask = cv2.inRange(hsv, lower_green, upper_green)
-    cv2.bitwise_not(mask, mask)
+    # mask = cv2.inRange(hsv, lower_green, upper_green)
+    # refMask = cv2.inRange(hsv, lower_yellow, upper_yellow)
+    # cv2.bitwise_not(refMask, refMask)
+
+    # refMask = cv2.erode(refMask, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2,2)), iterations = 1)
+    # refMask = cv2.dilate(refMask, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5,5)), iterations = 1)
+
+
+    # cv2.bitwise_not(mask, mask)
 
     fgmask = fgbg.apply(frame)
 
@@ -141,21 +148,33 @@ while True:
 
     ret, thresh1 = cv2.threshold(clonedFrame, 100, 255, cv2.THRESH_BINARY)
     # fgmask = cv2.bitwise_and(fgmask, mask)
+    # reffgMask = cv2.bitwise_and(fgmask, refMask)
+    # notrefMask = cv2.bitwise_not(reffgMask)
+    # fgmask = cv2.bitwise_and(fgmask, notrefMask)
 
     contours, hierarchy = cv2.findContours(fgmask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # refcontours, hierarchy = cv2.findContours(reffgMask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     contours = filtercontours(contours)
+    # refcontours = filtercontours(refcontours)
     dict = classifycontours(contours)
 
     for c in dict['ateam']:
         rect = cv2.boundingRect(c)
         x, y, w, h = rect
-        cv2.rectangle(frame, (x, y), (x + 10, y + 30), (255, 255, 255), 2)
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 255, 255), 2)
 
     for c in dict['bteam']:
         rect = cv2.boundingRect(c)
         x, y, w, h = rect
         cv2.rectangle(frame, (x, y), (x + 10, y + 30), (255, 0, 0), 2)
+
+    # for c in refcontours:
+    #     rect = cv2.boundingRect(c)
+    #     x, y, w, h = rect
+    #     crop_img = frame[y:y + h, x: x+ w]
+    #     cv2.rectangle(frame, (x, y), (x + w ,y + h), (255, 255, 0), 2)
+
     # fgmask = fgbg.apply(frame)
     # fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_OPEN, kernel)
     # fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_CLOSE, kernel)
@@ -294,6 +313,7 @@ while True:
     # # cv2.imshow('frame_origin',frame_origin)
     cv2.imshow('fg', fgmask)
     cv2.imshow('frame', frame)
+    # cv2.imshow('hsv', notrefMask)
     key = cv2.waitKey(1) & 0xff
     
     # if key == ord("s"):

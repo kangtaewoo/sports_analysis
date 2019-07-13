@@ -74,37 +74,37 @@ while True:
     frame = cv2.warpPerspective(frame_origin,m,(1280,720))
     (H, W) = frame.shape[:2]
   
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    # hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
  
 
-    mask = cv2.inRange(hsv, lower_green, upper_green)
-    res = cv2.bitwise_and(frame, frame, mask=mask)
-    res_bgr = cv2.cvtColor(res,cv2.COLOR_HSV2BGR)
-    res_gray = cv2.cvtColor(res, cv2.COLOR_BGR2GRAY)
+    # mask = cv2.inRange(hsv, lower_green, upper_green)
+    # res = cv2.bitwise_and(frame, frame, mask=mask)
+    # res_bgr = cv2.cvtColor(res,cv2.COLOR_HSV2BGR)
+    # res_gray = cv2.cvtColor(res, cv2.COLOR_BGR2GRAY)
    
 
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
+    # kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
 
-    fgmask = fgbg.apply(frame)
+    # fgmask = fgbg.apply(frame)
 
-    # 노이즈 제거
+    # # 노이즈 제거
 
-    fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_OPEN, kernel)
-    fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_CLOSE, kernel)
+    # fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_OPEN, kernel)
+    # fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_CLOSE, kernel)
 
 
-    nlabels, labels, stats, centroids = cv2.connectedComponentsWithStats(fgmask)
-    for index, centroid in enumerate(centroids):
-        if stats[index][0] == 0 and stats[index][1] == 0:
-            continue
-        if np.any(np.isnan(centroid)):
-            continue
+    # nlabels, labels, stats, centroids = cv2.connectedComponentsWithStats(fgmask)
+    # for index, centroid in enumerate(centroids):
+    #     if stats[index][0] == 0 and stats[index][1] == 0:
+    #         continue
+    #     if np.any(np.isnan(centroid)):
+    #         continue
 
-        x, y, w, h, area = stats[index]
-        centerX, centerY = int(centroid[0]), int(centroid[1])
-        # if h >= 1.5*w and h > 15 and h < 30 and x > 90:
-        #     cv2.circle(frame, (centerX, centerY), 1, (0, 0, 255), 2)
-        #     cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
+    #     x, y, w, h, area = stats[index]
+    #     centerX, centerY = int(centroid[0]), int(centroid[1])
+    #     # if h >= 1.5*w and h > 15 and h < 30 and x > 90:
+    #     #     cv2.circle(frame, (centerX, centerY), 1, (0, 0, 255), 2)
+    #     #     cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
 
         if h >= 1.5*w and h > 15 and h < 30 and x > 90 and y < 690:
             point.append([int(x+w/2), int(y+h/2)])
@@ -135,7 +135,7 @@ while True:
             nzCount = cv2.countNonZero(res2)
 
             if(nzCountblue >= 1):
-                cv2.rectangle(frame, (x,y),(x+w,y+h),(255,0,0),2)
+                cv2.rectangle(frame, (x,y),(x+10,y+30),(255,0,0),2)
                 if x < 615:
                     if y < 132:
                         rightBlue += 1
