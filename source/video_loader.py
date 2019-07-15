@@ -5,7 +5,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from source.ui_video_loader import Ui_MainWindow
+from source.ui.video_loader_ui import Ui_MainWindow
 from source.video_preprocessor import Video_Preprocessor
 
 class VideoThread(QThread):
@@ -17,19 +17,26 @@ class VideoThread(QThread):
         self.run_flag = False
         self.cap = cv2.VideoCapture("../../videos/test1.mp4")
         self.pre = Video_Preprocessor()
+        self.count = 0
 
     def __del__(self):
         self.cap.release()
 
     def run(self):
         while self.run_flag:
+            # 속도 개선 프레임 개선
+            self.count += 1
+            if self.count % 3 != 1:
+                continue
+
             ret, frame_origin = self.cap.read()
             if ret is None:
                 print("end of video")
                 break
-            frame = cv2.cvtColor(frame_origin, cv2.COLOR_BGR2RGB)
+            frame_origin = cv2.cvtColor(frame_origin, cv2.COLOR_BGR2RGB)
             #영상 전처리기 사용
-            # frame = self.pre.start_processing(frame_origin)
+            frame = self.pre.start_processing(frame_origin)
+
             height, width, channel = frame.shape
             bytePerLine = channel * width
             qframe = QImage(frame.data,
