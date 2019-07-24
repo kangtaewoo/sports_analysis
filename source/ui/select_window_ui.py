@@ -8,7 +8,17 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from source.ui.video_loader_ui import Ui_MainWindow
+
+
 class Ui_SelectWindow(object):
+    # def openWindow(self):
+    #     self.window = QtWidgets.QMainWindow()
+    #     self.ui = Ui_MainWindow()
+    #     self.ui.setupUi(self.window)
+    #     self.window.show()
+    #     self.time = 0
+
     def setupUi(self, SelectWindow):
         SelectWindow.setObjectName("SelectWindow")
         SelectWindow.resize(800, 600)
@@ -29,6 +39,10 @@ class Ui_SelectWindow(object):
 
         self.retranslateUi(SelectWindow)
         QtCore.QMetaObject.connectSlotsByName(SelectWindow)
+
+        # self.pushButton.clicked.connect(self.openWindow)
+        # self.pushButton_2.clicked.connect(self.openWindow)
+        # self.pushButton_3.clicked.connect(self.openWindow)
 
     def retranslateUi(self, SelectWindow):
         _translate = QtCore.QCoreApplication.translate

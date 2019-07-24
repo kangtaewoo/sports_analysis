@@ -97,13 +97,11 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(1)
         self.tabWidget_2.setCurrentIndex(0)
-        # self.startButton.clicked.connect(MainWindow.start_btn_clicked)
-        # self.stopButton.clicked.connect(MainWindow.stop_btn_clicked)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Analysis_player"))
         self.video_frame1.setText(_translate("MainWindow", "origin_frame"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.origin_view), _translate("MainWindow", "origin"))
         self.video_frame2.setText(_translate("MainWindow", "processing_frame"))
