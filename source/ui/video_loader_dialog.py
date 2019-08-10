@@ -8,6 +8,9 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from source.main.video_process_label import VideoLabel
+
+
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
@@ -56,7 +59,8 @@ class Ui_Form(object):
         self.processing_view.setObjectName("processing_view")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.processing_view)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.video_frame2 = QtWidgets.QLabel(self.processing_view)
+        # self.video_frame2 = QtWidgets.QLabel(self.processing_view)
+        self.video_frame2 = VideoLabel(self.processing_view)
         self.video_frame2.setObjectName("video_frame2")
         self.verticalLayout_3.addWidget(self.video_frame2)
         self.tabWidget.addTab(self.processing_view, "")

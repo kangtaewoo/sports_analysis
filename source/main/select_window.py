@@ -19,9 +19,8 @@ class MainWindow(QMainWindow, Ui_SelectWindow):
     def btn_clicked(self, button):
         if button.text() == "축구":
             self.video_path = "../../../videos/test1.mp4"
+            self.switch_window.emit()
         elif button.text() == "농구":
             pass
         elif button.text() == "핸드볼":
             pass
-
-        self.switch_window.emit()
