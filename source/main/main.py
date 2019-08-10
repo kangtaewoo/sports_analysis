@@ -1,7 +1,7 @@
 import sys
 from PyQt5 import QtWidgets
 
-from source.main.main_window import MainWindow
+from source.main.select_window import MainWindow
 from source.main.video_loader import VideoLoader
 
 
